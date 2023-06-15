@@ -69,12 +69,12 @@ SubProceso indice = buscarProducto(nombreProducto, precio, cantidad, idProducto)
 	Definir i como entero
 	
 	Mostrar "ingresar nombre del producto o id del producto"
-	Leer ProductoBusqueda
-	
+	Leer productoBusqueda
+	productoBusqueda = Minusculas(productoBusqueda)
 	i = 0
 	
 	Mientras i <= 4 Hacer
-		si nombreProducto[i] == productoBusqueda || idProducto[i] == productoBusqueda Entonces
+		si nombreProducto[i] == productoBusqueda | idProducto[i] == productoBusqueda Entonces
 			Mostrar cantidad[i]," ",nombreProducto[i]," $", precio[i]," ",idProducto[i]
 			indice = i
 			i = 10

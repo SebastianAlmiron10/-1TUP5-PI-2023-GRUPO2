@@ -8,15 +8,19 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	Dimension precio[5]
 	Dimension idProducto[5]
 	precioTotal = 0
-	cantidadVendida = 0
+	cantidadVentas = 0
 	
 	nombreProducto[0] = "arroz"
 	nombreProducto[1] = "jabon"
 	nombreProducto[2] = "-"
-	nombreProducto[3] = "-"
+	nombreProducto[3] = "gaseosa"
 	nombreProducto[4] = "-"
 	idProducto[0] = "#1234"
+	idProducto[1] = "#2345"
+	idProducto[3] = "#3456"
 	cantidad[0] = 3
+	cantidad[1] = 5
+	cantidad[3] = 4
 	Repetir
 		
 		Repetir

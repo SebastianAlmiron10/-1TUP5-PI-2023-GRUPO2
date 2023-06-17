@@ -77,7 +77,6 @@ SubProceso registrarVenta(nombreProducto, precio, cantidad, cantidadVentas Por R
 			precioTotal = precioTotal + (precio[indice] * cantidadVendida)
 			cantidad[indice] = cantidad[indice]  - cantidadVendida
 			flag = Verdadero
-		
 		FinSi	
 	Mientras Que flag = Falso
 
@@ -108,19 +107,55 @@ SubProceso indice = buscarProducto(nombreProducto, precio, cantidad, idProducto)
 FinSubProceso
 
 SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precio)
+	Definir precioAux como real
+	Definir cantidadAux Como Entero
+	Definir idProductoAux, nombreProductoAux Como Caracter
 	
 	Mientras i <= 4 Hacer
 		si nombreProducto[i] == "-" Entonces
 			
 			mostrar Sin Saltar "Ingrese el nombre del producto: "
-			leer nombreProducto[i]
-			mostrar Sin Saltar "Ingrese el id del producto: "
-			leer idProducto[i]
-			mostrar Sin Saltar "Ingrese la cantidad del producto: "
-			leer cantidad[i]
-			mostrar Sin Saltar "Ingrese el precio del producto: "
-			leer precio[i]
+			Repetir
+				//variable auxilia para que no entre en la base de datos sin comprobarla
+				leer nombreProductoAux
+				si nombreProductoAux == "" || nombreProductoAux == "-" || nombreProductoAux == " " Entonces
+					Mostrar "nombre invalido, ingrese nuevamente"
+				SiNo
+					nombreProducto[i] = nombreProductoAux
+				FinSi
+			mientras que nombreProductoAux == "" | nombreProductoAux == "-" | nombreProductoAux == " "
 			
+			mostrar Sin Saltar "Ingrese el id del producto: "
+			Repetir
+				leer idProductoAux
+				si Longitud(idProductoAux) <> 5 Entonces
+					Mostrar "id invalido, ingrese nuevamente"
+				SiNo
+					idProducto[i] = idProductoAux
+				FinSi
+			Mientras que Longitud(idProductoAux) <> 5
+			
+			mostrar Sin Saltar "Ingrese la cantidad del producto: "
+			Repetir
+				//variable auxilia para que no entre en la base de datos sin comprobarla
+				leer cantidadAux
+				si precioAux < 1 Entonces
+					Mostrar "cantidad invalido, ingrese nuevamente"
+				SiNo
+					cantidad[i] = cantidadAux
+				FinSi
+			Mientras Que cantidadAux < 1
+			
+			mostrar Sin Saltar "Ingrese el precio del producto: "
+			Repetir
+				//variable auxilia para que no entre en la base de datos sin comprobarla
+				leer precioAux
+				si precioAux < 1 Entonces
+					Mostrar "precio invalido, ingrese nuevamente"
+				SiNo
+					precio[i] = precioAux
+				FinSi
+			Mientras Que precioAux < 1
 			
 			i = 10
 		SiNo
@@ -138,50 +173,4 @@ SubProceso resumenDia(cantidadVentas, precioTotal)
 	mostrar "Las ventas totales del dia fueron: ", cantidadVentas
 	Mostrar "El monto total de las ventas fueron: ", precioTotal
 
-	
 FinSubProceso
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-

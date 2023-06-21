@@ -3,7 +3,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	Definir nombreProducto, idProducto, nombreCliente, dniCliente como caracter
 	Definir precioUnitario, precioTotal como real
 	Definir terminarPrograma, encontrado Como Logico
-	dim = 5
+	dim = 10
 	dimC = 2
 	Dimension cantidad[dim]
 	Dimension nombreProducto[dim]
@@ -25,6 +25,11 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	nombreProducto[2] = "tuco"
 	nombreProducto[3] = "gaseosa"
 	nombreProducto[4] = "salchicha"
+	nombreProducto[5] = "-"
+	nombreProducto[6] = "-"
+	nombreProducto[7] = "-"
+	nombreProducto[8] = "-"
+	nombreProducto[9] = "-"
 	
 	precioUnitario[0] = 250
     precioUnitario[1] = 120
@@ -35,8 +40,8 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	idProducto[0] = "#1234"
 	idProducto[1] = "#2345"
 	idProducto[2] = "#3456"
-	idProducto[3] = "#3456"
-	idProducto[4] = "#3456"
+	idProducto[3] = "#4567"
+	idProducto[4] = "#5678"
 	
 	cantidad[0] = 3
 	cantidad[1] = 2
@@ -46,7 +51,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	Repetir
 		
 		Repetir
-			Mostrar "MENU"
+			Mostrar "----MENU------------------------------------"
 			Mostrar "1. registrar ventas"
 			Mostrar "2. agregar producto"
 			Mostrar "3. buscar producto"
@@ -54,6 +59,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 			Mostrar "5. modificar producto"
 			Mostrar "6. resumen del dia"
 			Mostrar "7. SALIR"
+			Mostrar "---------------------------------------------"
 			Mostrar Sin Saltar "ingresar opcion "
 			Leer opcionMenu
 			si opcionMenu > 7 | opcionMenu < 1 Entonces
@@ -65,7 +71,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 			1:
 				registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVentas, precioTotal, idProducto, encontrado, nombreCliente, dniCliente)
 			2:
-				agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario)
+				agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 			3:
 				indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, encontrado)
 			4:
@@ -201,12 +207,12 @@ SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idP
 FinSubProceso
 
 //Subproceso de agregar producto, esta busca en la lista lso productos vacios ( "-", " ", "" ), y ahi permite rellenar ese campo
-SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario)
+SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 	Definir precioAux como real
-	Definir cantidadAux Como Entero
+	Definir cantidadAux, repetido Como Entero
 	Definir idProductoAux, nombreProductoAux Como Caracter
 	
-	Mientras i <= 4 Hacer
+	Mientras i <= dim - 1 Hacer
 		si nombreProducto[i] == "-" Entonces
 			
 			mostrar Sin Saltar "Ingrese el nombre del producto: "
@@ -222,19 +228,20 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario)
 			
 			mostrar Sin Saltar "Ingrese el id del producto: "
 			Repetir
-				leer idProductoAux
-				si Longitud(idProductoAux) <> 5 Entonces
+				leer idProductoAux 
+				repetido = idRepetido(idProducto, idProductoAux, dim)
+				si (Longitud(idProductoAux) <> 5) o (repetido == 1) Entonces
 					Mostrar "id invalido, ingrese nuevamente"
 				SiNo
 					idProducto[i] = idProductoAux
 				FinSi
-			Mientras que Longitud(idProductoAux) <> 5
+			Mientras que Longitud(idProductoAux) <> 5 o (repetido == 1)
 			
 			mostrar Sin Saltar "Ingrese la cantidad del producto: "
 			Repetir
 				//variable auxilia para que no entre en la base de datos sin comprobarla
 				leer cantidadAux
-				si precioAux < 1 Entonces
+				si cantidadAux < 1 Entonces
 					Mostrar "cantidad invalido, ingrese nuevamente"
 				SiNo
 					cantidad[i] = cantidadAux
@@ -252,9 +259,9 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario)
 				FinSi
 			Mientras Que precioAux < 1
 			
-			i = 10
+			i = 11
 		SiNo
-			si i == 4 Entonces
+			si i == dim - 1 Entonces
 				Mostrar "Inadmisible"
 			FinSi
 		FinSi
@@ -262,7 +269,20 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario)
 	FinMientras
 	
 FinSubProceso
-
+SubProceso repetido = idRepetido(idProducto, idProductoAux Por Referencia, dim)
+	i = 0
+	Mientras i <= dim - 1 Hacer
+		si idProducto[i] == idProductoAux Entonces
+			repetido = 1
+			i = 11
+		SiNo
+			repetido = 0
+		FinSi
+		i = i + 1
+	FinMientras
+	
+	
+FinSubProceso
 //SubProceso de ordenar producto por menor stock
 SubProceso ordenarProductoPorMenorStock(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 	Definir i, j, posMenor, aux Como Entero
@@ -294,8 +314,10 @@ SubProceso ordenarProductoPorMenorStock(nombreProducto, cantidad, idProducto, pr
 	FinPara
 	
 	Para j = 0 Hasta dim - 1 Hacer
-		Mostrar Sin Saltar cantidad[j]," | ",nombreProducto[j]," | $", precioUnitario[j]," | ",idProducto[j]
-		Mostrar ""
+		Si nombreProducto[j] <> "-"
+			Mostrar Sin Saltar cantidad[j]," | ",nombreProducto[j]," | $", precioUnitario[j]," | ",idProducto[j]
+			Mostrar ""
+		FinSi
 	FinPara
 FinSubProceso
 

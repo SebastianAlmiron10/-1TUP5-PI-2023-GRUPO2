@@ -17,16 +17,16 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	terminarPrograma = Falso
 	
 	nombreCliente[0] = "jose"
-	nombreCliente[1] = "-"
-	nombreCliente[2] = "-"
-	nombreCliente[3] = "-"
-	nombreCliente[4] = "-"
+//	nombreCliente[1] = "-"
+//	nombreCliente[2] = "-"
+//	nombreCliente[3] = "-"
+//	nombreCliente[4] = "-"
 	
 	dniCliente[0] = "12345678"
-	dniCliente[1] = "-"
-	dniCliente[2] = "-"
-	dniCliente[3] = "-"
-	dniCliente[4] = "-"
+//	dniCliente[1] = "-"
+//	dniCliente[2] = "-"
+//	dniCliente[3] = "-"
+//	dniCliente[4] = "-"
 	
 	
 	nombreProducto[0] = "arroz"
@@ -34,11 +34,11 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 	nombreProducto[2] = "tuco"
 	nombreProducto[3] = "gaseosa"
 	nombreProducto[4] = "salchicha"
-	nombreProducto[5] = "-"
-	nombreProducto[6] = "-"
-	nombreProducto[7] = "-"
-	nombreProducto[8] = "-"
-	nombreProducto[9] = "-"
+//	nombreProducto[5] = "-"
+//	nombreProducto[6] = "-"
+//	nombreProducto[7] = "-"
+//	nombreProducto[8] = "-"
+//	nombreProducto[9] = "-"
 	
 	precioUnitario[0] = 250
     precioUnitario[1] = 120
@@ -67,14 +67,15 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 			Mostrar "4. ordenar producto por stock"
 			Mostrar "5. modificar producto"
 			Mostrar "6. resumen del dia"
-			Mostrar "7. SALIR"
+			Mostrar "7. agregar nuevo cliente"
+			Mostrar "8. SALIR"
 			Mostrar "---------------------------------------------"
 			Mostrar Sin Saltar "ingresar opcion "
 			Leer opcionMenu
-			si opcionMenu > 7 | opcionMenu < 1 Entonces
+			si opcionMenu > 8 | opcionMenu < 1 Entonces
 				Mostrar "opcion invalida"
 			FinSi
-		Mientras que opcionMenu > 7 | opcionMenu < 1
+		Mientras que opcionMenu > 8 | opcionMenu < 1
 		
 		Segun opcionMenu Hacer
 			1:
@@ -82,7 +83,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 			2:
 				agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 			3:
-				indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, encontrado)
+				indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado)
 			4:
 				ordenarProductoPorMenorStock(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 			5:
@@ -114,7 +115,7 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 	i = 0  
 	Repetir
 		precioTotal = 0
-		indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, encontrado)
+		indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado)
 		si encontrado == Verdadero Entonces
 			Mostrar "ingresar cantidad a vender"
 			Repetir
@@ -236,33 +237,40 @@ SubProceso agregarNuevoCliente(nombreCliente, dniCliente, dimC)
 
 FinSubProceso
 
-
 //funcion de buscar producto, esta misma devuelve el indice que sirve para otros subprocesos
-SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, encontrado Por Referencia)
+SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado Por Referencia)
 	Definir productoBusqueda como caracter
 	Definir i como entero
 	
+	//lee el nombre o id del producto y lo guarda en una variable auxiliar
 	Mostrar "ingresar nombre del producto o id del producto"
 	Leer productoBusqueda
+	//lo convierte a minuscula
 	productoBusqueda = Minusculas(productoBusqueda)
-	i = 0
 	
-	Mientras i <= 4 Hacer
+	i = 0
+	Mientras i <= dim - 1 Hacer
+		//va iterando "i" hasta que la variable auxiliar coincide con el nombre o el id
 		si nombreProducto[i] == productoBusqueda | idProducto[i] == productoBusqueda Entonces
+			//se muestra el producto
 			Mostrar cantidad[i]," | ",nombreProducto[i]," | $", precioUnitario[i]," | ",idProducto[i]
+			//una vez que lo encuentra cuarda el valor de "i" en una variable llamada "indice" que servira para calcular el total y descontar la cantidad
 			indice = i
 			i = 10
+			//la variable "encontrado" que fue mandada por referencia, se le asigna el valor verdadero, para indicar que el producto se ha encontrado
 			encontrado = Verdadero
 		SiNo
-			si i == 4 Entonces
+			//si no lo encuentra y ya paso por todo el array, significa que "i" es igual a la dimencion - 1, y ya el producto no fue encontrado
+			si i == dim - 1 Entonces
 				Mostrar "producto no encontrado"
+				//y la variable "encontrado" toma el valor de falso, que indicara de donde fue llamada que no continue
 				encontrado = Falso
 			FinSi
 		FinSi
 		i = i + 1
 	FinMientras
-	
 FinSubProceso
+//fin funcion de buscar producto
 
 //Subproceso de agregar producto, esta busca en la lista lso productos vacios ( "-", " ", "" ), y ahi permite rellenar ese campo
 SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario, dim)
@@ -271,19 +279,22 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 	Definir idProductoAux, nombreProductoAux Como Caracter
 	
 	Mientras i <= dim - 1 Hacer
-		si nombreProducto[i] == "-" Entonces
-			
+		//'i' va iterando hasta encontrar el lugar en el array vacio
+		si nombreProducto[i] == "" Entonces
+			//una vez encontrado pide los datos
 			mostrar Sin Saltar "Ingrese el nombre del producto: "
 			Repetir
-				//variable auxilia para que no entre en la base de datos sin comprobarla
+				//se crea una variable auxiliar para cada valor de la lista, esto es para validarlo antes agregarlo a la 'base de datos/array'
 				leer nombreProductoAux
+				//lee el valor ingresado y comprueba que sea un nombre valido
 				si nombreProductoAux == "" | nombreProductoAux == "-" | nombreProductoAux == " " Entonces
 					Mostrar "nombre invalido, ingrese nuevamente"
 				SiNo
+					//una vez que ingreso un nombre valido lo agrega a la variable principal en el array
 					nombreProducto[i] = nombreProductoAux
 				FinSi
 			mientras que nombreProductoAux == "" | nombreProductoAux == "-" | nombreProductoAux == " "
-			
+			//y asi con el resto de los datos
 			mostrar Sin Saltar "Ingrese el id del producto: "
 			Repetir
 				leer idProductoAux 
@@ -297,7 +308,6 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 			
 			mostrar Sin Saltar "Ingrese la cantidad del producto: "
 			Repetir
-				//variable auxilia para que no entre en la base de datos sin comprobarla
 				leer cantidadAux
 				si cantidadAux < 1 Entonces
 					Mostrar "cantidad invalido, ingrese nuevamente"
@@ -308,7 +318,6 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 			
 			mostrar Sin Saltar "Ingrese el precio unitario del producto: "
 			Repetir
-				//variable auxilia para que no entre en la base de datos sin comprobarla
 				leer precioAux
 				si precioAux < 1 Entonces
 					Mostrar "precio unitario invalido, ingrese nuevamente"
@@ -382,7 +391,7 @@ FinSubProceso
 //SubProceso de modicar un producto
 SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitario, encontrado Por Referencia)
 	Definir opcionMenu Como Entero
-	indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, encontrado)
+	indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado)
 	si encontrado == Verdadero Entonces
 		Mostrar "QUE QUIERE MODIFICAR DEL PRODUCTO"
 		Mostrar "1. nombre"

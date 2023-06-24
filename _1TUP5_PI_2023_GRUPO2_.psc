@@ -114,6 +114,8 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 	flag = Falso
 	i = 0  
 	Repetir
+		montoSubtotal = 0
+		precioTotalDelProductoResumen[i] = 0
 		precioTotal = 0
 		indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado)
 		si encontrado == Verdadero Entonces
@@ -155,7 +157,7 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 	leer esCliente
 	Segun esCliente Hacer
 		1:
-			clienteEncontrado = buscarCliente(nombreCliente, dniCliente)
+			clienteEncontrado = buscarCliente(nombreCliente, dniCliente, dimC)
 		2:
 			Mostrar "Desea Registrar al Cliente? 1. Si 2.No"
 			Leer opcionCliente
@@ -188,13 +190,13 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 	FinSi
 FinSubProceso
 
-SubProceso clienteEncontrado = buscarCliente(nombreCliente, dniCliente)
+SubProceso clienteEncontrado = buscarCliente(nombreCliente, dniCliente, dimC)
 	Mostrar "ingresar nombre o dni del cliente"
 	Leer clienteBusqueda
 	clienteBusqueda = Minusculas(clienteBusqueda)
 	i = 0
 	
-	Mientras i <= 0 Hacer
+	Mientras i <= dimC - 1 Hacer
 		si nombreCliente[i] == clienteBusqueda | dniCliente[i] == clienteBusqueda Entonces
 			Mostrar nombreCliente[i]," ",dniCliente[i]
 			i = 10

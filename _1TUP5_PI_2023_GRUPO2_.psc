@@ -79,7 +79,7 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 		
 		Segun opcionMenu Hacer
 			1:
-				registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVentas, precioTotal, idProducto, encontrado, nombreCliente, dniCliente, dimC)
+				registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVentas, precioTotal, idProducto, encontrado, nombreCliente, dniCliente, dimC, dim)
 			2:
 				agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario, dim)
 			3:
@@ -99,17 +99,17 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 FinProceso
 
 //Subproceso de registrar venta, esta está conectada con la funcion de buscar producto, y obtiene el indice para saber el precioUnitario, cantidad, etc.
-SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVentas Por Referencia, montoSubtotal Por Referencia, idProducto, encontrado Por Referencia, nombreCliente, dniCliente, dimC)
+SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVentas Por Referencia, montoSubtotal Por Referencia, idProducto, encontrado Por Referencia, nombreCliente, dniCliente, dimC, dim)
 	definir flag, otroProducto como logico
-	Definir opcionMenu, cantidadResumen, i, esCliente, opcionCliente Como Entero
+	Definir opcionMenu, cantidadResumen, i, esCliente, opcionCliente, validacionCantidad Como Entero
 	Definir nombreProductoResumen, idProductoResumen Como Caracter
 	Definir precioResumen, precioTotalDelProductoResumen, PrecioTotalDeLaVentaResumen, montoTotal, descuentoCliente Como Real
-	Dimension cantidadResumen[3]
-	Dimension nombreProductoResumen[3]
-	Dimension precioResumen[3]
-	Dimension idProductoResumen[3]
-	Dimension precioTotalDelProductoResumen[3]
-	Dimension PrecioTotalDeLaVentaResumen[3]
+	Dimension cantidadResumen[100]
+	Dimension nombreProductoResumen[100]
+	Dimension precioResumen[100]
+	Dimension idProductoResumen[100]
+	Dimension precioTotalDelProductoResumen[100]
+	Dimension PrecioTotalDeLaVentaResumen[100]
 	
 	flag = Falso
 	i = 0  
@@ -122,8 +122,8 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 				Leer cantidadVendida
 				si cantidadVendida > cantidad[indice]
 					Mostrar"no cuenta con la cantidad deseada, ingrese nuevamente "
+					validacionCantidad = 0
 				SiNo
-					cantidadVentas = cantidadVentas + 1
 					precioTotal = precioTotal + (precioUnitario[indice] * cantidadVendida)
 					cantidad[indice] = cantidad[indice]  - cantidadVendida
 					flag = Verdadero
@@ -134,6 +134,8 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 					precioResumen[i] = precioUnitario[indice]
 					precioTotalDelProductoResumen[i] = precioTotal
 					montoSubtotal = montoSubtotal + precioTotalDelProductoResumen[i]
+					
+					validacionCantidad = 1
 				FinSi	
 			Mientras Que flag = Falso
 		FinSi
@@ -145,7 +147,9 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 			De Otro Modo:
 				otroProducto = Falso
 		Fin Segun
-		i = i + 1
+		si validacionCantidad == 1 Entonces
+			i = i + 1;
+		FinSi
 	Mientras Que otroProducto == Verdadero
 	Mostrar "es cliente? 1. Si  2. No"
 	leer esCliente
@@ -168,6 +172,7 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 		Para j = 0 Hasta i - 1 Hacer
 			Mostrar Sin Saltar cantidadResumen[j]," | ",nombreProductoResumen[j]," | $", precioResumen[j]," | ",idProductoResumen[j]," | $",precioTotalDelProductoResumen[j]
 			Mostrar ""
+			cantidadVentas = cantidadVentas + 1
 		FinPara
 		//Si es Cliente Tiene 15% de Descuento
 		Mostrar "monto subtotal $",montoSubtotal
@@ -210,7 +215,7 @@ SubProceso agregarNuevoCliente(nombreCliente, dniCliente, dimC)
 	i = 0
 	j = 0
 	Mientras i <= dimC - 1 Hacer
-		Si nombreCliente[i] == "-" y dniCliente[i] == "-" Entonces
+		Si nombreCliente[i] == "" y dniCliente[i] == "" Entonces
 			Mostrar "Ingrese el Dni del Cliente: "
 			Leer dniAux
 			Mientras j <= dimC - 1 Hacer
@@ -234,7 +239,6 @@ SubProceso agregarNuevoCliente(nombreCliente, dniCliente, dimC)
 		FinSi
 		i = i + 1
 	FinMientras
-
 FinSubProceso
 
 //funcion de buscar producto, esta misma devuelve el indice que sirve para otros subprocesos
@@ -249,14 +253,15 @@ SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idP
 	productoBusqueda = Minusculas(productoBusqueda)
 	
 	i = 0
+
 	Mientras i <= dim - 1 Hacer
 		//va iterando "i" hasta que la variable auxiliar coincide con el nombre o el id
 		si nombreProducto[i] == productoBusqueda | idProducto[i] == productoBusqueda Entonces
 			//se muestra el producto
 			Mostrar cantidad[i]," | ",nombreProducto[i]," | $", precioUnitario[i]," | ",idProducto[i]
-			//una vez que lo encuentra cuarda el valor de "i" en una variable llamada "indice" que servira para calcular el total y descontar la cantidad
+			//una vez que lo encuentra guarda el valor de "i" en una variable llamada "indice" que servira para calcular el total y descontar la cantidad
 			indice = i
-			i = 10
+			i = dim + 1
 			//la variable "encontrado" que fue mandada por referencia, se le asigna el valor verdadero, para indicar que el producto se ha encontrado
 			encontrado = Verdadero
 		SiNo
@@ -451,7 +456,7 @@ FinSubProceso
 
 SubProceso resumenDia(cantidadVentas, precioTotal)
 	
-	mostrar "Las ventas totales del dia fueron: ", cantidadVentas
+	Mostrar "Las ventas totales del dia fueron: ", cantidadVentas
 	Mostrar "El monto total de las ventas fueron: ", montoSubtotal
 	
 FinSubProceso

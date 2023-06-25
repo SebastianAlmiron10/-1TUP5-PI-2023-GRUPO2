@@ -51,19 +51,19 @@ Proceso _1TUP5_PI_2023_GRUPO2_
 		
 		Repetir
 			Mostrar "----MENU------------------------------------"
-			Mostrar "1. registrar ventas"
-			Mostrar "2. agregar producto"
-			Mostrar "3. buscar producto"
-			Mostrar "4. ordenar producto por stock"
-			Mostrar "5. modificar producto"
-			Mostrar "6. resumen del dia"
-			Mostrar "7. agregar nuevo cliente"
+			Mostrar "1. Registrar ventas"
+			Mostrar "2. Agregar productos"
+			Mostrar "3. Buscar productos"
+			Mostrar "4. Ordenar productos por stock"
+			Mostrar "5. Modificar productos"
+			Mostrar "6. Resumen del dia"
+			Mostrar "7. Agregar nuevo cliente"
 			Mostrar "8. SALIR"
 			Mostrar "---------------------------------------------"
-			Mostrar Sin Saltar "ingresar opcion "
+			Mostrar Sin Saltar "Ingrese una de las opciones "
 			Leer opcionMenu
 			si opcionMenu > 8 | opcionMenu < 1 Entonces
-				Mostrar "opcion invalida"
+				Mostrar "Opcion Invalida"
 			FinSi
 		Mientras que opcionMenu > 8 | opcionMenu < 1
 		
@@ -113,12 +113,12 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 		indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idProducto, dim, encontrado)
 		//si el valor de la variable 'encontrado' es verdadero, significa que encontro al producto
 		si encontrado == Verdadero Entonces
-			Mostrar Sin Saltar "ingresar cantidad a vender: "
+			Mostrar Sin Saltar "Ingrese la cantidad a vender: "
 			Repetir
 				Leer cantidadVendida
 				//despues de ingresar la cantidad comprueba que no sea mayor a lo que tiene en stock utilizando la variable 'indice'
 				si cantidadVendida > cantidad[indice]
-					Mostrar Sin Saltar "no cuenta con la cantidad deseada, ingrese nuevamente: "
+					Mostrar Sin Saltar "No cuenta con la cantidad deseada, ingrese nuevamente: "
 					//la variable de 'validacionCantidad' sirve para que itere o no la variable 'i'
 					validacionCantidad = 0
 				SiNo
@@ -141,8 +141,14 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 			Mientras Que productoCorrecto = Falso
 		FinSi
 		//pregunta se desea agregar mas prodcutos a la venta, si es asi, la variable 'otroProducto' toma el valor verdadero y se repite el bucle
-		Mostrar "desea agregar otro productos a la venta? 1. seguir  2. salir"
-		Leer opcionMenu
+		Mostrar "¿Desea agregar otros productos a la venta? 1. Seguir  2. Salir"
+		Repetir
+			Leer opcionMenu
+			si opcionMenu < 1 o opcionMenu > 2 Entonces
+				mostrar "Opcion incorrecta, intente nuevamente"
+			FinSi
+			
+		Mientras Que opcionMenu < 1 o opcionMenu > 2
 		Segun opcionMenu Hacer
 			1:
 				otroProducto = Verdadero
@@ -155,16 +161,27 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 	Mientras Que otroProducto == Verdadero
 	
 	//pregunta si es cliente
-	Mostrar "es cliente? 1. Si  2. No"
-	leer esCliente
+	Mostrar "¿Es cliente? 1. Si  2. No"
+	Repetir
+		leer esCliente
+		si esCliente < 1 o esCliente > 2 Entonces
+			mostrar "Opcion incorrecta, intente nuevamente"
+		FinSi
+	Mientras Que esCliente < 1 o esCliente > 2
 	Segun esCliente Hacer
 		1:
 			//si la respuesta es si, llama a la funcion de buscar cliente, si el cliente es encontrado, se le aplica descuento
 			clienteEncontrado = buscarCliente(nombreCliente, dniCliente, dimC)
 		2:
 			//si la respuesta es no, le pregunta si se quiere asociar para tener el descuento en la proxima compra
-			Mostrar "Desea Registrar al Cliente? 1. Si 2.No"
-			Leer opcionCliente
+			Mostrar "¿Desea Registrar al Cliente? 1. Si 2.No"
+			Repetir
+				Leer opcionCliente
+				si opcionCliente < 1 o opcionCliente > 2 Entonces
+					mostrar "Opcion incorrecta, intente nuevamente"
+				FinSi
+			Mientras Que opcionCliente < 1 o opcionCliente > 2
+			
 			Segun opcionCliente Hacer
 				1: 
 					//si la respuesta es si, llama a la funcion de agregar nuevo cliente, y ahi comprueba que no sea un cliente existente
@@ -186,15 +203,15 @@ SubProceso registrarVenta(nombreProducto, precioUnitario, cantidad, cantidadVent
 			cantidadVentas = cantidadVentas + 1
 		FinPara
 		//Si es Cliente Tiene 15% de Descuento
-		Mostrar "monto subtotal $",montoSubtotal
+		Mostrar "Monto subtotal $",montoSubtotal
 		Si clienteEncontrado == 1 Entonces
 			descuentoCliente = montoSubtotal * 0.15
-			Mostrar "descuento cliente $", descuentoCliente
+			Mostrar "Descuento cliente $", descuentoCliente
 			montoTotal = montoSubtotal - descuentoCliente
-			Mostrar "monto total a pagar $", montoTotal
+			Mostrar "Monto total a pagar $", montoTotal
 		SiNo
 			montoTotal = montoSubtotal
-			Mostrar "monto total a pagar $", montoTotal
+			Mostrar "Monto total a pagar $", montoTotal
 		FinSi
 	FinSi
 	montoResumenDelDia = montoResumenDelDia + montoTotal
@@ -202,8 +219,16 @@ FinSubProceso
 
 //Funcion de buscar cliente
 SubProceso clienteEncontrado = buscarCliente(nombreCliente, dniCliente, dimC)
-	Mostrar "ingresar nombre o dni del cliente"
-	Leer clienteBusqueda
+	Mostrar "Ingrese el nombre o dni del cliente"
+	Repetir
+		Leer clienteBusqueda
+		si Longitud(clienteBusqueda) > 8 y Longitud(clienteBusqueda) < 7 Entonces
+			mostrar "El dni no puede superar los 8 digitos"
+			
+		FinSi
+	Mientras Que Longitud(clienteBusqueda) > 8 y Longitud(clienteBusqueda) < 7
+	
+	
 	//ingresa el nombre o dni del cliente y lo convierte todo a minuscula
 	clienteBusqueda = Minusculas(clienteBusqueda)
 	i = 0
@@ -213,12 +238,12 @@ SubProceso clienteEncontrado = buscarCliente(nombreCliente, dniCliente, dimC)
 		si nombreCliente[i] == clienteBusqueda | dniCliente[i] == clienteBusqueda Entonces
 			//si no encuentra lo muetra, y la funcion devuelve el valor 1 si lo encuentra o 0 si no, dentro de la variable 'clienteEncontrado'
 			Mostrar nombreCliente[i]," ",dniCliente[i]
-			i = dim + 1
+			i = dimC + 1
 			clienteEncontrado = 1
 		SiNo
 			//si no lo encuentra y ya lo recorrio completo, muestra que no fue encontrado y devuelve el valor 0
 			si i == dim - 1 Entonces
-				Mostrar "cliente no encontrado"
+				Mostrar "Cliente no encontrado"
 				ClienteEncontrado = 0
 			FinSi
 		FinSi
@@ -237,7 +262,13 @@ SubProceso agregarNuevoCliente(nombreCliente, dniCliente, dimC)
 		//va iterando 'i' hasta encontrar un lugar vacio en la lista
 		Si nombreCliente[i] == "" y dniCliente[i] == "" Entonces
 			Mostrar "Ingrese el Dni del Cliente: "
-			Leer dniAux
+			Repetir
+				Leer dniAux
+				si Longitud(dniAux) > 8 y Longitud(dniAux) < 7 Entonces
+					mostrar "El dni es invalido, intente nuevamente"
+				FinSi
+			Mientras Que Longitud(dniAux) > 8 y Longitud(dniAux) < 7
+			
 			//con una busqueda secuencial comprueba que el dni no este repetido
 			Mientras j <= dimC - 1 Hacer
 				Si dniCliente[j] == dniAux Entonces
@@ -272,7 +303,7 @@ SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idP
 	Definir i como entero
 	
 	//lee el nombre o id del producto y lo guarda en una variable auxiliar
-	Mostrar "ingresar nombre del producto o id del producto"
+	Mostrar "Ingrese el nombre del producto o id del producto"
 	Leer productoBusqueda
 	//lo convierte a minuscula
 	productoBusqueda = Minusculas(productoBusqueda)
@@ -292,7 +323,7 @@ SubProceso indice = buscarProducto(nombreProducto, precioUnitario, cantidad, idP
 		SiNo
 			//si no lo encuentra y ya paso por todo el array, significa que "i" es igual a la dimencion - 1, y ya el producto no fue encontrado
 			si i == dim - 1 Entonces
-				Mostrar "producto no encontrado"
+				Mostrar "Producto no encontrado"
 				//y la variable "encontrado" toma el valor de falso, que indicara de donde fue llamada que no continue
 				encontrado = Falso
 			FinSi
@@ -318,7 +349,7 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 				leer nombreProductoAux
 				//lee el valor ingresado y comprueba que sea un nombre valido
 				si nombreProductoAux == "" | nombreProductoAux == "-" | nombreProductoAux == " " Entonces
-					Mostrar "nombre invalido, ingrese nuevamente"
+					Mostrar "Nombre invalido, ingrese nuevamente"
 				SiNo
 					//una vez que ingreso un nombre valido lo agrega a la variable principal en el array
 					nombreProducto[i] = nombreProductoAux
@@ -331,8 +362,8 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 				//llama a la funcion para comprobar si el id no esta repetido, que esta le devolvera a la variable 'repetido' un valor de 1 si es repetido o 0 si no
 				repetido = idRepetido(idProducto, idProductoAux, dim)
 				//validacion para que el id no sea mayor a 5 digitos
-				si (Longitud(idProductoAux) <> 5) || (repetido == 1) Entonces
-					Mostrar "id invalido, ingrese nuevamente"
+				si (Longitud(idProductoAux) <> 5) | (repetido == 1) Entonces
+					Mostrar "Id invalido, ingrese nuevamente"
 				SiNo
 					idProducto[i] = idProductoAux
 				FinSi
@@ -342,7 +373,7 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 			Repetir
 				leer cantidadAux
 				si cantidadAux < 1 Entonces
-					Mostrar "cantidad invalido, ingrese nuevamente"
+					Mostrar "Cantidad invalido, ingrese nuevamente"
 				SiNo
 					cantidad[i] = cantidadAux
 				FinSi
@@ -352,7 +383,7 @@ SubProceso agregarProducto(nombreProducto, cantidad, idProducto, precioUnitario,
 			Repetir
 				leer precioAux
 				si precioAux < 1 Entonces
-					Mostrar "precio unitario invalido, ingrese nuevamente"
+					Mostrar "Precio unitario invalido, ingrese nuevamente"
 				SiNo
 					precioUnitario[i] = precioAux
 				FinSi
@@ -440,10 +471,10 @@ SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitari
 	si encontrado == Verdadero Entonces
 		//si encontro el producto entra y pregunta que quiere modificar del producto
 		Mostrar "QUE QUIERE MODIFICAR DEL PRODUCTO"
-		Mostrar "1. nombre"
-		Mostrar "2. id"
-		Mostrar "3. cantidad"
-		Mostrar "4. precio"
+		Mostrar "1. Nombre"
+		Mostrar "2. Id"
+		Mostrar "3. Cantidad"
+		Mostrar "4. Precio"
 		
 		Leer opcionMenu
 		Segun opcionMenu Hacer
@@ -452,10 +483,10 @@ SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitari
 			1:
 				Repetir
 					//variable auxilia para que no entre en la base de datos sin comprobarla
-					Mostrar Sin Saltar "ingresar nombre"
+					Mostrar Sin Saltar "Ingresar nombre"
 					leer nombreProductoAux
 					si nombreProductoAux == "" | nombreProductoAux == "-" | nombreProductoAux == " " Entonces
-						Mostrar "nombre invalido, ingrese nuevamente"
+						Mostrar "Nombre invalido, ingrese nuevamente"
 					SiNo
 						nombreProducto[indice] = nombreProductoAux
 					FinSi
@@ -467,8 +498,8 @@ SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitari
 					//llama a la funcion para comprobar si el id no esta repetido, que esta le devolvera a la variable 'repetido' un valor de 1 si es repetido o 0 si no
 					repetido = idRepetido(idProducto, idProductoAux, dim)
 					//validacion para que el id no sea mayor a 5 digitos
-					si Longitud(idProductoAux) <> 5 || (repetido == 1) Entonces
-						Mostrar Sin Saltar "id invalido, ingrese nuevamente: "
+					si Longitud(idProductoAux) <> 5 | (repetido == 1) Entonces
+						Mostrar Sin Saltar "Id invalido, ingrese nuevamente: "
 					SiNo
 						idProducto[indice] = idProductoAux
 					FinSi
@@ -480,7 +511,7 @@ SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitari
 					leer cantidadAux
 					//validacion para que el cantidad no sea negativa
 					si precioAux < 1 Entonces
-						Mostrar "cantidad invalido, ingrese nuevamente"
+						Mostrar "Cantidad invalido, ingrese nuevamente"
 					SiNo
 						cantidad[indice] = cantidadAux
 					FinSi
@@ -492,7 +523,7 @@ SubProceso modificarProducto(nombreProducto, cantidad, idProducto, precioUnitari
 					leer precioAux
 					//validacion para que el precio no sea negativo
 					si precioAux < 1 Entonces
-						Mostrar "precio unitario invalido, ingrese nuevamente"
+						Mostrar "Precio unitario invalido, ingrese nuevamente"
 					SiNo
 						precioUnitario[indice] = precioAux
 					FinSi

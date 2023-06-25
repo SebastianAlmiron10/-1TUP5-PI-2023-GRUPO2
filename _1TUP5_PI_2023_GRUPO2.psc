@@ -1,4 +1,4 @@
-Proceso 1TUP5-PI-2023-GRUPO2
+Proceso _1TUP5_PI_2023_GRUPO2
 	Definir opcionMenu, cantidad, cantidadVentas, dim, dimC como entero
 	Definir nombreProducto, idProducto, nombreCliente, dniCliente como caracter
 	Definir precioUnitario, precioTotal, montoResumenDelDia como real
